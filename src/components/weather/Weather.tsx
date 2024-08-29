@@ -13,15 +13,21 @@ interface WeatherData {
   name: string;
 }
 
-const Weather: React.FC = () => {
+interface WeatherProps {
+  city: string;
+}
+
+const Weather: React.FC<WeatherProps> = ({ city }) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [city, setCity] = useState<string>("Moscow");
-  const [inputCity, setInputCity] = useState<string>("");
 
   const kelvinToCelsius = (kelvin: number): number => {
     return Math.round(kelvin - 273.15);
+  };
+
+  const cleanCityName = (name: string): string => {
+    return name.replace(/^Arrondissement de /, "");
   };
 
   useEffect(() => {
@@ -46,40 +52,20 @@ const Weather: React.FC = () => {
     fetchWeather();
   }, [city]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (inputCity.trim()) {
-      setCity(inputCity.trim());
-      setInputCity("");
-    }
-  };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!weatherData) return null;
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={inputCity}
-          onChange={(e) => setInputCity(e.target.value)}
-          placeholder="Enter city name"
-        />
-        <button type="submit">Search</button>
-      </form>
-
-      <div>
-        <h2>Weather in {weatherData.name}</h2>
-        <p>Temperature: {kelvinToCelsius(weatherData.main.temp)}°C</p>
-        <p>Humidity: {weatherData.main.humidity}%</p>
-        <p>Description: {weatherData.weather[0].description}</p>
-        <img
-          src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
-          alt="Weather icon"
-        />
-      </div>
+      <h2>Weather in {cleanCityName(weatherData.name)}</h2>
+      <p>Temperature: {kelvinToCelsius(weatherData.main.temp)}°C</p>
+      <p>Humidity: {weatherData.main.humidity}%</p>
+      <p>Description: {weatherData.weather[0].description}</p>
+      <img
+        src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
+        alt="Weather icon"
+      />
     </div>
   );
 };

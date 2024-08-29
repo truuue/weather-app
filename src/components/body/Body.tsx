@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Weather from "../weather/Weather";
 
 const Body: React.FC = () => {
+  const [city, setCity] = useState<string>("Toulouse");
+  const [inputCity, setInputCity] = useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputCity.trim()) {
+      setCity(inputCity.trim());
+      setInputCity("");
+    }
+  };
+
   return (
     <div>
       <h1>Weather App</h1>
@@ -10,8 +21,19 @@ const Body: React.FC = () => {
         cities.
       </p>
 
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={inputCity}
+          onChange={(e) => setInputCity(e.target.value)}
+          placeholder="Enter city name"
+        />
+        <button type="submit">Search</button>
+      </form>
+
       <br />
-      <Weather />
+
+      <Weather city={city} />
     </div>
   );
 };
