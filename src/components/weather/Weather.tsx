@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Graph from "./ForecastGraph";
+import WeatherWeekList from "./WeatherWeekList";
 
 interface WeatherData {
   main: {
@@ -18,11 +19,20 @@ interface WeatherProps {
   city: string;
 }
 
+interface WeatherDayData {
+  date: Date;
+  maxTemp: number;
+  minTemp: number;
+  icon: string;
+  weather: Array<{ description: string; icon: string }>;
+}
+
 const Weather: React.FC<WeatherProps> = ({ city }) => {
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [forecastData, setForecastData] = useState<any | null>(null);
+  const [chartData, setChartData] = useState<any[]>([]);
 
   const kelvinToCelsius = (kelvin: number): number => {
     return Math.round(kelvin - 273.15);
@@ -76,27 +86,56 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
     fetchForecast();
   }, [city]);
 
-  interface ForecastItem {
-    dt: number;
-    main: {
-      temp: number;
-    };
-  }
+  useEffect(() => {
+    if (forecastData) {
+      const data = forecastData.list.slice(0, 8).map((item: any) => ({
+        time: new Date(item.dt * 1000).toLocaleTimeString(),
+        temperature: kelvinToCelsius(item.main.temp),
+      }));
+      setChartData(data);
+    }
+  }, [forecastData]);
 
-  const getChartData = () => {
+  const getWeekForecastData = (): WeatherDayData[] => {
     if (!forecastData) return [];
 
-    return forecastData.list.slice(0, 8).map((item: ForecastItem) => ({
-      x: new Date(item.dt * 1000),
-      y: kelvinToCelsius(item.main.temp),
-    }));
+    const dailyData: WeatherDayData[] = [];
+    const dailyMap = new Map();
+
+    forecastData.list.forEach((item: any) => {
+      const date = new Date(item.dt * 1000);
+      const dateString = date.toDateString();
+
+      if (!dailyMap.has(dateString)) {
+        dailyMap.set(dateString, {
+          date,
+          maxTemp: kelvinToCelsius(item.main.temp_max),
+          minTemp: kelvinToCelsius(item.main.temp_min),
+          icon: item.weather[0].icon,
+          weather: item.weather,
+        });
+      } else {
+        const existingData = dailyMap.get(dateString);
+        existingData.maxTemp = Math.max(
+          existingData.maxTemp,
+          kelvinToCelsius(item.main.temp_max)
+        );
+        existingData.minTemp = Math.min(
+          existingData.minTemp,
+          kelvinToCelsius(item.main.temp_min)
+        );
+      }
+    });
+
+    dailyMap.forEach((value) => dailyData.push(value));
+    return dailyData.slice(0, 6);
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!weatherData || !forecastData) return null;
 
-  const chartData = getChartData();
+  const weekForecastData = getWeekForecastData();
 
   return (
     <>
@@ -117,6 +156,15 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
           <div style={{ width: "100%", height: "300px" }}>
             <Graph data={chartData} />
           </div>
+        </div>
+      </div>
+
+      {/* 7D forecast */}
+      <div className="flex flex-col justify-center items-center w-full">
+        <h3 className="text-2xl font-medium mb-5 underline">7D forecast</h3>
+
+        <div style={{ width: "100%", height: "300px" }}>
+          <WeatherWeekList data={weekForecastData} />
         </div>
       </div>
     </>
