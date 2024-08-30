@@ -108,10 +108,14 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
         src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
         alt="Weather icon"
       />
-      <h3>24H forecast</h3>
-      <div style={{ width: "100%", height: "300px" }}>
-        <Graph data={chartData} />
-      </div>
+
+      {/* <div className="flex flex-col justify-center items-center">
+        <h3>24H forecast</h3>
+
+        <div style={{ width: "100%", height: "300px" }}>
+          <Graph data={chartData} />
+        </div>
+      </div> */}
     </>
   );
 };
