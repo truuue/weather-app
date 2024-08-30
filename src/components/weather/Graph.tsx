@@ -24,23 +24,16 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
     Math.floor(temperatures.length / 2)
   ];
 
-  // Calculer les heures uniques pour l'axe des abscisses
-  const uniqueHours = Array.from(
-    new Set(data.map((point) => new Date(point.x).getHours()))
-  );
-  const tickValues = uniqueHours.map((hour) => {
-    const date = new Date(data[0].x);
-    date.setHours(hour);
-    return date.getTime();
-  });
+  const tickValues = data.map((point) => new Date(point.x).getTime());
 
   return (
     <VictoryChart
       theme={VictoryTheme.material}
-      width={600}
-      height={300}
-      domainPadding={20}
+      width={300}
+      height={150}
+      domainPadding={{ x: 5, y: 5 }}
       containerComponent={<VictoryVoronoiContainer />}
+      domain={{ x: [data[0].x, data[data.length - 1].x] }}
     >
       <VictoryAxis
         tickValues={tickValues}
@@ -49,7 +42,7 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
           return date.getHours().toString().padStart(2, "0") + "h";
         }}
         style={{
-          tickLabels: { fontSize: 12 },
+          tickLabels: { fontSize: 5 },
         }}
       />
       <VictoryAxis
@@ -57,24 +50,28 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
         tickValues={[minTemp, medianTemp, maxTemp]}
         tickFormat={(t) => `${t.toFixed(1)}°C`}
         style={{
-          axisLabel: { padding: 35 },
+          tickLabels: { fontSize: 5 },
         }}
       />
       <VictoryLine
         data={data}
         style={{
-          data: { stroke: "#c43a31" },
+          data: { stroke: "#c43a31", strokeWidth: 1 },
         }}
       />
       <VictoryScatter
         data={data}
-        size={5}
+        size={2}
         style={{
           data: { fill: "#c43a31" },
         }}
         labels={({ datum }) => `${datum.y.toFixed(1)}°C`}
         labelComponent={
-          <VictoryTooltip cornerRadius={0} flyoutStyle={{ fill: "white" }} />
+          <VictoryTooltip
+            cornerRadius={0}
+            flyoutStyle={{ fill: "white" }}
+            style={{ fontSize: 5 }}
+          />
         }
       />
     </VictoryChart>
