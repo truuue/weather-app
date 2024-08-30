@@ -14,24 +14,31 @@ const Body: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Weather App</h1>
-      <p>
+    <div className="flex flex-col justify-center items-center w-screen h-screen">
+      <h1 className="text-4xl font-semibold pb-5">Weather App</h1>
+      <p className="text-lg pb-5">
         This is a weather app that allows you to check the weather in different
         cities.
       </p>
 
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-row justify-center items-center gap-2 pb-5"
+      >
         <input
           type="text"
           value={inputCity}
           onChange={(e) => setInputCity(e.target.value)}
           placeholder="Enter city name"
+          className="p-1 border border-gray-200 rounded-lg shadow"
         />
-        <button type="submit">Search</button>
+        <button
+          type="submit"
+          className="p-1 border border-gray-200 rounded-lg shadow"
+        >
+          Search
+        </button>
       </form>
-
-      <br />
 
       <Weather city={city} />
     </div>
