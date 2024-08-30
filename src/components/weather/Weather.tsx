@@ -99,7 +99,7 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
   const chartData = getChartData();
 
   return (
-    <div>
+    <>
       <h2>Weather in {cleanCityName(weatherData.name)}</h2>
       <p>Temperature: {kelvinToCelsius(weatherData.main.temp)}°C</p>
       <p>Humidity: {weatherData.main.humidity}%</p>
@@ -109,8 +109,10 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
         alt="Weather icon"
       />
       <h3>24H forecast</h3>
-      <Graph data={chartData} />
-    </div>
+      <div style={{ width: "100%", height: "300px" }}>
+        <Graph data={chartData} />
+      </div>
+    </>
   );
 };
 
