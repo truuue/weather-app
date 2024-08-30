@@ -33,6 +33,9 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
   const [error, setError] = useState<string | null>(null);
   const [forecastData, setForecastData] = useState<any | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
+  const [weekForecastData, setWeekForecastData] = useState<WeatherDayData[]>(
+    []
+  );
 
   const kelvinToCelsius = (kelvin: number): number => {
     return Math.round(kelvin - 273.15);
@@ -128,14 +131,20 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
     });
 
     dailyMap.forEach((value) => dailyData.push(value));
-    return dailyData.slice(0, 6);
+
+    return dailyData;
   };
+
+  useEffect(() => {
+    if (forecastData) {
+      const data = getWeekForecastData();
+      setWeekForecastData(data);
+    }
+  }, [forecastData]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!weatherData || !forecastData) return null;
-
-  const weekForecastData = getWeekForecastData();
 
   return (
     <>
@@ -159,9 +168,9 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
         </div>
       </div>
 
-      {/* 7D forecast */}
+      {/* 6D forecast */}
       <div className="flex flex-col justify-center items-center w-full">
-        <h3 className="text-2xl font-medium mb-5 underline">7D forecast</h3>
+        <h3 className="text-2xl font-medium mb-5 underline">6D forecast</h3>
 
         <div style={{ width: "100%", height: "300px" }}>
           <WeatherWeekList data={weekForecastData} />
