@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Graph from "./Graph";
+import Graph from "./ForecastGraph";
 
 interface WeatherData {
   main: {
@@ -109,13 +109,16 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
         alt="Weather icon"
       />
 
-      {/* <div className="flex flex-col justify-center items-center">
-        <h3>24H forecast</h3>
+      {/* Hidden 24H forecast */}
+      <div className="hidden">
+        <div className="flex flex-col justify-center items-center">
+          <h3>24H forecast</h3>
 
-        <div style={{ width: "100%", height: "300px" }}>
-          <Graph data={chartData} />
+          <div style={{ width: "100%", height: "300px" }}>
+            <Graph data={chartData} />
+          </div>
         </div>
-      </div> */}
+      </div>
     </>
   );
 };
