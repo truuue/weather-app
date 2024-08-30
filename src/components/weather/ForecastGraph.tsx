@@ -17,14 +17,24 @@ interface GraphProps {
 }
 
 const Graph: React.FC<GraphProps> = ({ data }) => {
-  const temperatures = data.map((point) => point.y);
+  if (!data || data.length === 0) {
+    return <div>Aucune donnée disponible</div>;
+  }
+
+  const validData = data.filter((point) => point && point.x && point.y);
+
+  if (validData.length === 0) {
+    return <div>Données invalides</div>;
+  }
+
+  const temperatures = validData.map((point) => point.y);
   const minTemp = Math.min(...temperatures);
   const maxTemp = Math.max(...temperatures);
   const medianTemp = temperatures.sort((a, b) => a - b)[
     Math.floor(temperatures.length / 2)
   ];
 
-  const tickValues = data.map((point) => new Date(point.x).getTime());
+  const tickValues = validData.map((point) => new Date(point.x).getTime());
 
   return (
     <VictoryChart
@@ -33,7 +43,7 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
       height={150}
       domainPadding={{ x: 5, y: 5 }}
       containerComponent={<VictoryVoronoiContainer />}
-      domain={{ x: [data[0].x, data[data.length - 1].x] }}
+      domain={{ x: [validData[0].x, validData[validData.length - 1].x] }}
     >
       <VictoryAxis
         tickValues={tickValues}
@@ -54,13 +64,13 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
         }}
       />
       <VictoryLine
-        data={data}
+        data={validData}
         style={{
           data: { stroke: "#c43a31", strokeWidth: 2 },
         }}
       />
       <VictoryScatter
-        data={data}
+        data={validData}
         size={3}
         style={{
           data: { fill: "#c43a31" },
