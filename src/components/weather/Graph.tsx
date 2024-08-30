@@ -42,7 +42,7 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
           return date.getHours().toString().padStart(2, "0") + "h";
         }}
         style={{
-          tickLabels: { fontSize: 5 },
+          tickLabels: { fontSize: 8 },
         }}
       />
       <VictoryAxis
@@ -50,18 +50,18 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
         tickValues={[minTemp, medianTemp, maxTemp]}
         tickFormat={(t) => `${t.toFixed(1)}°C`}
         style={{
-          tickLabels: { fontSize: 5 },
+          tickLabels: { fontSize: 8 },
         }}
       />
       <VictoryLine
         data={data}
         style={{
-          data: { stroke: "#c43a31", strokeWidth: 1 },
+          data: { stroke: "#c43a31", strokeWidth: 2 },
         }}
       />
       <VictoryScatter
         data={data}
-        size={2}
+        size={3}
         style={{
           data: { fill: "#c43a31" },
         }}
@@ -70,7 +70,7 @@ const Graph: React.FC<GraphProps> = ({ data }) => {
           <VictoryTooltip
             cornerRadius={0}
             flyoutStyle={{ fill: "white" }}
-            style={{ fontSize: 5 }}
+            style={{ fontSize: 8 }}
           />
         }
       />
