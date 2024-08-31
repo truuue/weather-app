@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import WeatherWeekList from "./WeatherWeekList";
-import HourlyForecast from "./HourlyForecast";
 
 interface WeatherData {
   main: {
@@ -33,10 +31,6 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
   const [error, setError] = useState<string | null>(null);
   const [forecastData, setForecastData] = useState<any | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
-  const [weekForecastData, setWeekForecastData] = useState<WeatherDayData[]>(
-    []
-  );
-  const [hourlyForecastData, setHourlyForecastData] = useState<any[]>([]);
 
   const kelvinToCelsius = (kelvin: number): number => {
     return Math.round(kelvin - 273.15);
@@ -136,31 +130,6 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
     return dailyData;
   };
 
-  useEffect(() => {
-    if (forecastData) {
-      const data = getWeekForecastData();
-      setWeekForecastData(data);
-    }
-  }, [forecastData]);
-
-  useEffect(() => {
-    if (forecastData) {
-      const currentHour = new Date().getHours();
-      const data = forecastData.list
-        .slice(0, 6)
-        .map((item: any, index: number) => {
-          const hour = (currentHour + index + 1) % 24;
-          return {
-            time: `${hour.toString().padStart(2, "0")}:00`,
-            temperature: kelvinToCelsius(item.main.temp),
-            icon: item.weather[0].icon,
-            description: item.weather[0].description,
-          };
-        });
-      setHourlyForecastData(data);
-    }
-  }, [forecastData]);
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   if (!weatherData || !forecastData) return null;
@@ -174,21 +143,14 @@ const Weather: React.FC<WeatherProps> = ({ city }) => {
             <h2>Weather in {cleanCityName(weatherData.name)}</h2>
             <p>Temperature: {kelvinToCelsius(weatherData.main.temp)}°C</p>
             <p>Humidity: {weatherData.main.humidity}%</p>
-            <p>Description: {weatherData.weather[0].description}</p>
-            <img
-              src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
-              alt="Weather icon"
-            />
+            <div className="flex flex-row justify-center items-center">
+              <p>Description: {weatherData.weather[0].description}</p>
+              <img
+                src={`http://openweathermap.org/img/w/${weatherData.weather[0].icon}.png`}
+                alt="Weather icon"
+              />
+            </div>
           </div>
-          {/* 6H forecast */}
-          <div className="w-full">
-            <HourlyForecast data={hourlyForecastData} />
-          </div>
-        </div>
-
-        {/* 6D forecast */}
-        <div className="w-full">
-          <WeatherWeekList data={weekForecastData} />
         </div>
       </div>
     </div>
