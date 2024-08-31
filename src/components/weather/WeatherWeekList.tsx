@@ -38,31 +38,28 @@ const WeatherWeekList: React.FC<WeatherWeekListProps> = ({ data }) => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full">
-      <ul className="flex flex-row justify-evenly items-center w-4/5 h-full max-h-60">
+    <div className="bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl shadow-lg p-4 max-w-sm mx-auto">
+      <h2 className="text-white text-xl font-semibold mb-4">6D Forecast</h2>
+      <ul className="space-y-3">
         {data.map((day, index) => (
           <li
             key={index}
-            className="flex flex-col justify-center items-center text-center max-w-28 min-w-28 h-full p-2 rounded-lg bg-gray-100"
+            className="flex items-center justify-between bg-white bg-opacity-20 rounded-lg p-3 text-white"
           >
-            {/* weather-day-date */}
-            <div className="py-1">{formatDate(day.date)}</div>
-
-            {/* weather-day-icon */}
-            <div className="py-2">
+            <div className="flex items-center">
               <img
                 src={`http://openweathermap.org/img/w/${day.weather[0].icon}.png`}
                 alt={day.weather[0].description}
-                className="w-10 h-10 mx-auto"
+                className="w-10 h-10 mr-3"
               />
+              <div>
+                <div className="font-medium">{formatDate(day.date)}</div>
+                <div className="text-sm">{day.weather[0].description}</div>
+              </div>
             </div>
-
-            {/* weather-day-temps */}
-            <div className="flex flex-col justify-center items-center py-1">
-              {/* weather-day-max-temp */}
-              <span className="text-black text-lg">{day.maxTemp} °C</span>
-              {/* weather-day-min-temp */}
-              <span className="text-gray-500 text-md">{day.minTemp} °C</span>
+            <div className="text-right">
+              <div className="font-bold">{Math.round(day.maxTemp)}°C</div>
+              <div className="text-sm">{Math.round(day.minTemp)}°C</div>
             </div>
           </li>
         ))}
