@@ -19,7 +19,7 @@ const Body: React.FC = () => {
       <h1 className="hidden">Weather App</h1>
 
       {/* Hour and city */}
-      <div className="flex flex-col justify-center items-center p-4 bg-gray-100 rounded-lg mb-4">
+      <div className="flex flex-col justify-center items-center p-4 bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl shadow-lg text-white mb-4">
         <h2 className="text-xl font-semibold mb-2">{city}</h2>
         <p className="text-2xl font-semibold">
           {new Date().toLocaleTimeString([], {
