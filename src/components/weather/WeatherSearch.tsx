@@ -19,7 +19,7 @@ const WeatherSearch: React.FC<WeatherSearchProps> = ({ onCityChange }) => {
     <div className="flex flex-col justify-center items-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-row justify-center items-center gap-2 mb-4"
+        className="flex flex-row justify-center items-center gap-2"
       >
         <input
           type="text"
