@@ -44,7 +44,7 @@ const WeatherWeekList: React.FC<WeatherWeekListProps> = ({ data }) => {
         {data.map((day, index) => (
           <li
             key={index}
-            className="flex items-center justify-between bg-white bg-opacity-20 rounded-lg p-3 text-white"
+            className="flex items-center justify-between bg-white bg-opacity-20 rounded-lg p-2 text-white"
           >
             <div className="flex items-center">
               <img
