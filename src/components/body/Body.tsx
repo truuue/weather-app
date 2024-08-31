@@ -105,29 +105,43 @@ const Body: React.FC = () => {
   }, [forecastData]);
 
   return (
-    <div className="flex flex-col justify-start items-center w-screen min-h-screen p-4 overflow-y-auto">
-      {/* hidden title for referencing */}
+    <div className="grid grid-cols-2 w-screen max-w-screen-lg min-h-screen py-20 overflow-y-auto mx-auto">
+      {/* titre caché pour référence */}
       <h1 className="hidden">Weather App</h1>
 
-      {/* Locale */}
-      <Locale city={city} />
+      {/* rangée supérieure */}
+      <div className="col-span-2 flex justify-evenly items-center">
+        {/* Locale */}
+        <div className="flex justify-center items-center w-full">
+          <Locale city={city} />
+        </div>
 
-      {/* WeatherSearch */}
-      <WeatherSearch onCityChange={setCity} />
-
-      {/* Weather */}
-      <div className="w-full max-w-md">
-        <Weather city={city} />
+        {/* WeatherSearch */}
+        <div className="flex justify-center items-center w-full">
+          <WeatherSearch onCityChange={setCity} />
+        </div>
       </div>
 
-      {/* 6H forecast */}
-      <div className="w-full">
-        <HourlyForecast data={hourlyForecastData} />
-      </div>
+      {/* rangée inférieure */}
+      <div className="col-span-2 grid grid-cols-2">
+        {/* colonne gauche */}
+        <div className="flex justify-center items-center">
+          {/* 6D forecast */}
+          <WeatherWeekList data={weekForecastData} />
+        </div>
 
-      {/* 6D forecast */}
-      <div className="w-full">
-        <WeatherWeekList data={weekForecastData} />
+        {/* colonne droite */}
+        <div className="flex flex-col justify-center items-center space-y-4">
+          {/* Weather */}
+          <div className="flex justify-center items-center w-full">
+            <Weather city={city} />
+          </div>
+
+          {/* 6H forecast */}
+          <div className="flex justify-center items-center w-full">
+            <HourlyForecast data={hourlyForecastData} />
+          </div>
+        </div>
       </div>
     </div>
   );
